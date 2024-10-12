@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://ttv08yb300vs"]
+
+[ext_resource type="Script" path="res://enviroment/location/location_setting.gd" id="1_p7kqj"]
+[ext_resource type="Script" path="res://enviroment/location/enviroment_setting.gd" id="2_ecq2o"]
+
+[node name="TestLocation" type="Node3D" node_paths=PackedStringArray("enviroment")]
+script = ExtResource("1_p7kqj")
+enviroment = NodePath("Enviroment")
+
+[node name="Enviroment" type="Node3D" parent="."]
+script = ExtResource("2_ecq2o")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Enviroment"]
+size = Vector3(10, 0.5, 10)
