@@ -1,14 +1,63 @@
-[gd_scene load_steps=3 format=3 uid="uid://ttv08yb300vs"]
+[gd_scene load_steps=8 format=3 uid="uid://ttv08yb300vs"]
 
 [ext_resource type="Script" path="res://enviroment/location/location_setting.gd" id="1_p7kqj"]
-[ext_resource type="Script" path="res://enviroment/location/enviroment_setting.gd" id="2_ecq2o"]
+[ext_resource type="Shader" path="res://shader/dashed_grid/dashed_grid.gdshader" id="2_1elc8"]
+[ext_resource type="PackedScene" uid="uid://dnmnouo7t8spr" path="res://character/player/player.tscn" id="3_yqv02"]
 
-[node name="TestLocation" type="Node3D" node_paths=PackedStringArray("enviroment")]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gd4g6"]
+
+[sub_resource type="Sky" id="Sky_gq4py"]
+sky_material = SubResource("ProceduralSkyMaterial_gd4g6")
+
+[sub_resource type="Environment" id="Environment_pxg75"]
+background_mode = 2
+sky = SubResource("Sky_gq4py")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a0wuj"]
+render_priority = 0
+shader = ExtResource("2_1elc8")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 16.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[node name="TestLocation" type="Node3D"]
 script = ExtResource("1_p7kqj")
-enviroment = NodePath("Enviroment")
 
-[node name="Enviroment" type="Node3D" parent="."]
-script = ExtResource("2_ecq2o")
+[node name="Weather" type="Node3D" parent="."]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Enviroment"]
-size = Vector3(10, 0.5, 10)
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Weather"]
+environment = SubResource("Environment_pxg75")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Weather"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Location" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Location"]
+material_override = SubResource("ShaderMaterial_a0wuj")
+use_collision = true
+collision_mask = 0
+size = Vector3(20, 1, 20)
+
+[node name="Player" parent="." instance=ExtResource("3_yqv02")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25591, 0.5, 0.0848761)
